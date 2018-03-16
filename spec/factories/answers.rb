@@ -1,6 +1,11 @@
 FactoryBot.define do
   factory :answer do
-    author "MyString"
-    answer "MyText"
+    question
+    body "MyString"
+  end
+
+  factory :invalid_answer, class: Answer do
+    question
+    body nil
   end
 end
