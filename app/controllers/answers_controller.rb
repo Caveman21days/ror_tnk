@@ -1,38 +1,35 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, except: [:index]
   before_action :set_question
   before_action :set_answer, only: [:show, :edit, :update, :destroy]
-
 
   def index
     @answers = @question.answers
   end
 
-  def new
-    @answer = Answer.new
-  end
-
   def create
     @answer = @question.answers.new(answer_params)
-    if @answer.save
-      redirect_to question_answers_path @question
-    else
-      render :new
-    end
+    flash[:notice] = if @answer.save
+                       'Answer succefully created!'
+                     else
+                       'Something gone wrong('
+                     end
+    redirect_to @question
   end
+  
+  def edit; end
 
-  def show
-  end
-
-  #создал просто по привычке)
-  def edit
-  end
-
-  def update
-  end
+  def update; end
 
   def destroy
+    if current_user.id == @answer.user_id
+      @answer.destroy
+      flash[:notice] = 'Answer successfully deleted!'
+      redirect_to @question
+    else
+      flash[:danger] = 'You do not own the answer!'
+    end
   end
-
 
 
 
@@ -47,6 +44,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, :question_id, :user_id)
   end
 end
