@@ -15,7 +15,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'haml-rails'
-gem 'rails-controller-testing'
+gem 'devise'
 # gem 'therubyracer', platforms: :ruby
 # gem 'mysql2'
 # gem 'redis', '~> 4.0'
@@ -26,13 +26,14 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
 end
 
 group :test do
   gem 'shoulda-matchers', '~> 3.1'
   gem 'rails-controller-testing'
+  gem 'capybara'
+  gem 'launchy'
 end
 
 group :development do
