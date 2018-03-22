@@ -63,11 +63,12 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with valid attributes' do
       it 'should saves new question in the db' do
-        expect { post :create, params: { question: attributes_for(:question, user_id: @user) } }.to change(Question, :count).by(1)
+        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect(assigns(:question).user_id).to eq @user.id
       end
 
       it 'redirects to show view' do
-        post :create, params: { question: attributes_for(:question, user_id: @user) }
+        post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to question_path(assigns(:question))
       end
     end
@@ -96,7 +97,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to question index view' do
         delete :destroy, params: { id: user_with_questions.first }
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to questions_path
       end
     end
 
@@ -108,7 +109,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to question index view' do
         delete :destroy, params: { id: question }
-        expect(response).to have_http_status(204)
+        expect(response).to redirect_to questions_path
       end
     end
   end

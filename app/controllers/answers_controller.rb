@@ -1,33 +1,38 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: [:index]
+  before_action :authenticate_user!
   before_action :set_question
-  before_action :set_answer, only: [:show, :edit, :update, :destroy]
+  before_action :set_answer, only: [:edit, :update, :destroy]
 
-  def index
-    @answers = @question.answers
-  end
 
   def create
-    @answer = @question.answers.new(answer_params)
-    flash[:notice] = if @answer.save
-                       'Answer succefully created!'
-                     else
-                       'Something gone wrong('
-                     end
-    redirect_to @question
+    if user_signed_in?
+      @answer = Answer.new(answer_params.merge({ user_id: current_user.id, question_id: @question.id }))
+      if @answer.save
+        flash[:notice] = 'Your answer successfully created'
+        redirect_to @question
+      else
+        flash[:danger] = @answer.errors.full_messages
+        render 'questions/show'
+      end
+    end
   end
-  
+
   def edit; end
 
   def update; end
 
   def destroy
-    if current_user.id == @answer.user_id
-      @answer.destroy
-      flash[:notice] = 'Answer successfully deleted!'
-      redirect_to @question
+    if user_signed_in?
+      if current_user.author_of?(@answer)
+        @answer.destroy
+        flash[:notice] = 'Your answer successfully deleted!'
+        redirect_to @question
+      else
+        flash[:danger] = @answer.errors.full_messages
+        render 'questions/show'
+      end
     else
-      flash[:danger] = 'You do not own the answer!'
+      redirect_to new_user_session_path
     end
   end
 
@@ -44,6 +49,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, :question_id, :user_id)
+    params.require(:answer).permit(:body)
   end
 end
