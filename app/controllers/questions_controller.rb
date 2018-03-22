@@ -11,17 +11,23 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = Answer.new
+    unless current_user.nil?
+      @answer = Answer.new
+    end
+    @answers = @question.answers
   end
 
   def create
-    @question = Question.new(question_params)
-
-    if @question.save
-      flash[:notice] = 'Your question successfully created'
-      redirect_to @question
-    else
-      render :new
+    unless current_user.nil?
+      @question = Question.new(question_params)
+      @question.user_id = current_user.id
+      if @question.save
+        flash[:notice] = 'Your question successfully created'
+        redirect_to @question
+      else
+        flash[:danger] = @question.errors.full_messages
+        render :new
+      end
     end
   end
 
@@ -30,14 +36,20 @@ class QuestionsController < ApplicationController
   def update; end
 
   def destroy
-    if current_user.id == @question.user_id
-      @question.destroy
-      flash[:notice] = 'Question successfully deleted!'
-      redirect_to root_path
+    if user_signed_in?
+      if current_user.author_of?(@question)
+        @question.destroy
+        flash[:notice] = 'Question successfully deleted!'
+        redirect_to questions_path
+      else
+        flash[:danger] = @question.errors.full_messages
+        redirect_to questions_path
+      end
     else
-      flash[:notice] = 'Something gone wrong'
+      redirect_to new_user_session_path
     end
   end
+
 
 
 
@@ -49,6 +61,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, :user_id)
+    params.require(:question).permit(:title, :body)
   end
 end
