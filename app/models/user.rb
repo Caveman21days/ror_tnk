@@ -10,6 +10,4 @@ class User < ApplicationRecord
   def author_of?(obj)
     self.id == obj.user_id
   end
-
-
 end

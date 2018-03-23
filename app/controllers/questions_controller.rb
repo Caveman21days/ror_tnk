@@ -11,23 +11,20 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    unless current_user.nil?
+    if current_user
       @answer = Answer.new
     end
     @answers = @question.answers
   end
 
   def create
-    unless current_user.nil?
-      @question = Question.new(question_params)
-      @question.user_id = current_user.id
-      if @question.save
-        flash[:notice] = 'Your question successfully created'
-        redirect_to @question
-      else
-        flash[:danger] = @question.errors.full_messages
-        render :new
-      end
+    @question = current_user.questions.new(question_params)
+    if @question.save
+      flash[:notice] = 'Your question successfully created'
+      redirect_to @question
+    else
+      flash[:danger] = 'Your question was not created!'
+      render :new
     end
   end
 
@@ -36,18 +33,13 @@ class QuestionsController < ApplicationController
   def update; end
 
   def destroy
-    if user_signed_in?
-      if current_user.author_of?(@question)
-        @question.destroy
-        flash[:notice] = 'Question successfully deleted!'
-        redirect_to questions_path
-      else
-        flash[:danger] = @question.errors.full_messages
-        redirect_to questions_path
-      end
+    if current_user.author_of?(@question)
+      @question.destroy
+      flash[:notice] = 'Question successfully deleted!'
     else
-      redirect_to new_user_session_path
+      flash[:danger] = 'Your question was not deleted!'
     end
+    redirect_to questions_path
   end
 
 
