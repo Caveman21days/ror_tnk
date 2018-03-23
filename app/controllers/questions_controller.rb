@@ -11,9 +11,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    if current_user
-      @answer = Answer.new
-    end
+    @answer = Answer.new if current_user
     @answers = @question.answers
   end
 

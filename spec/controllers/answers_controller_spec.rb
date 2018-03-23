@@ -12,6 +12,10 @@ RSpec.describe AnswersController, type: :controller do
     context 'with valid attributes' do
       it 'should saves new @question.answer in the db' do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+      end
+
+      it 'user of answer should be eq to signed user' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
         expect(assigns(:answer).user_id).to eq @user.id
       end
 

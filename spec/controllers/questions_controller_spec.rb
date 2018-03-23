@@ -67,6 +67,11 @@ RSpec.describe QuestionsController, type: :controller do
         expect(assigns(:question).user_id).to eq @user.id
       end
 
+      it 'user of question should be eq to signed user' do
+        post :create, params: { question: attributes_for(:question) }
+        expect(assigns(:question).user_id).to eq @user.id
+      end
+
       it 'redirects to show view' do
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to question_path(assigns(:question))
