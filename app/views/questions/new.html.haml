@@ -1,3 +1,6 @@
+- if @question.errors.any?
+  = render 'shared/errors', object: @question
+
 = form_for @question do |f|
   = f.label :title
   = f.text_field :title

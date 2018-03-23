@@ -5,15 +5,13 @@ class AnswersController < ApplicationController
 
 
   def create
-    if user_signed_in?
-      @answer = Answer.new(answer_params.merge({ user_id: current_user.id, question_id: @question.id }))
-      if @answer.save
-        flash[:notice] = 'Your answer successfully created'
-        redirect_to @question
-      else
-        flash[:danger] = @answer.errors.full_messages
-        render 'questions/show'
-      end
+    @answer = current_user.answers.new(answer_params.merge({ question: @question }))
+    if @answer.save
+      flash[:notice] = 'Your answer successfully created'
+      redirect_to @question
+    else
+      flash[:danger] = 'Your answer was not created!'
+      render 'questions/show'
     end
   end
 
@@ -22,17 +20,13 @@ class AnswersController < ApplicationController
   def update; end
 
   def destroy
-    if user_signed_in?
-      if current_user.author_of?(@answer)
-        @answer.destroy
-        flash[:notice] = 'Your answer successfully deleted!'
-        redirect_to @question
-      else
-        flash[:danger] = @answer.errors.full_messages
-        render 'questions/show'
-      end
+    if current_user.author_of?(@answer)
+      @answer.destroy
+      flash[:notice] = 'Your answer successfully deleted!'
+      redirect_to @question
     else
-      redirect_to new_user_session_path
+      flash[:danger] = 'Your answer was not destroyed!'
+      render 'questions/show'
     end
   end
 
