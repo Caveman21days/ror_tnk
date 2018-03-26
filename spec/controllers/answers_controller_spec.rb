@@ -11,17 +11,17 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'should saves new @question.answer in the db' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js } }.to change(question.answers, :count).by(1)
       end
 
       it 'user of answer should be eq to signed user' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
         expect(assigns(:answer).user_id).to eq @user.id
       end
 
-      it 'redirects to show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question_path(assigns(:question))
+      it 'renders create parchel' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+        expect(response).to render_template 'answers/create'
       end
     end
 
@@ -29,12 +29,12 @@ RSpec.describe AnswersController, type: :controller do
       let(:question_without_answers) { create(:question) }
 
       it 'does not saves new question in the db' do
-        expect{ post :create, params: { question_id: question_without_answers, answer: attributes_for(:invalid_answer) } }.to_not change(Answer, :count)
+        expect{ post :create, params: { question_id: question_without_answers, answer: attributes_for(:invalid_answer), format: :js } }.to_not change(Answer, :count)
       end
 
       it 'renders answer.question show view' do
-        post :create, params: { question_id: question_without_answers, answer: attributes_for(:invalid_answer) }
-        expect(response).to render_template 'questions/show'
+        post :create, params: { question_id: question_without_answers, answer: attributes_for(:invalid_answer), format: :js }
+        expect(response).to render_template 'answers/create'
       end
     end
   end

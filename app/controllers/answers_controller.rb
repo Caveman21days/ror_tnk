@@ -8,10 +8,8 @@ class AnswersController < ApplicationController
     @answer = current_user.answers.new(answer_params.merge({ question: @question }))
     if @answer.save
       flash[:notice] = 'Your answer successfully created'
-      redirect_to @question
     else
       flash[:danger] = 'Your answer was not created!'
-      render 'questions/show'
     end
   end
 
