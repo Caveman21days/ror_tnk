@@ -5,8 +5,7 @@
 
 
 .answers
-  - @question.answers.each do |answer|
-    = render 'questions/answers', answer: answer
+  = render @question.answers
 
 
 - if user_signed_in?

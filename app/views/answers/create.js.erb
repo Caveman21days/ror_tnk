@@ -2,6 +2,6 @@ $('.errors').html('<%= j render 'shared/errors', object: @answer %>');
 $('.flash').html('<%= j render 'shared/flash' %>');
 
 <% unless @answer.errors.any? %>
-  $('.answers').append('<%= j render 'questions/answers', answer: @answer %>');
+  $('.answers').append('<%= j render @answer %>');
 <% end %>
   $('#answer_body').val('');
