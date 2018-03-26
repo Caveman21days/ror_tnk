@@ -5,21 +5,24 @@ feature 'show question answers create' do
   given!(:question_answers) { create(:question_answers) }
   let(:user_with_answer) { create(:user_with_answer) }
 
-  scenario 'authenticated user can create answer' do
+  scenario 'authenticated user can create answer', js: true do
     sign_in(user)
-
     visit question_path(question_answers)
 
     fill_in 'answer_body', with: 'test_answer_for_auth_user'
     click_on 'Submit'
 
-    expect(page).to have_content 'test_answer_for_auth_user'
+    expect(current_path).to eq question_path(question_answers)
+
+    within '.answers' do
+      expect(page).to have_content 'test_answer_for_auth_user'
+    end
   end
 
-  scenario 'create invalid answer' do
+  scenario 'create invalid answer', js: true do
     sign_in(user)
-
     visit question_path(question_answers)
+
     click_on 'Submit'
 
     expect(page).to have_content "Body can't be blank"

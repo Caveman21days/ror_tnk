@@ -34,7 +34,29 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
   config.include AcceptanceHelper, type: :feature
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, js: true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
+
+
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 
@@ -44,4 +66,14 @@ RSpec.configure do |config|
       with.library :rails
     end
   end
+
+  Capybara.register_driver :chrome do |app|
+    # optional
+    client = Selenium::WebDriver::Remote::Http::Default.new
+    # optional
+    client.timeout = 120
+    Capybara::Selenium::Driver.new(app, :browser => :chrome, :http_client => client)
+  end
+
+  Capybara.javascript_driver = :chrome
 end

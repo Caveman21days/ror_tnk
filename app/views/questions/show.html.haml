@@ -1,19 +1,16 @@
+.errors
+
 %h3= @question.title
 %p= @question.body
 
-- @question.answers.each do |answer|
-  %ul
-    %li= answer.user.email
-    %li= answer.body
-    %li
-    - if user_signed_in? && current_user.author_of?(answer)
-      = link_to 'Delete', question_answer_path(@question, answer.id), method: :delete
+
+.answers
+  - @question.answers.each do |answer|
+    = render 'questions/answers', answer: answer
+
 
 - if user_signed_in?
-  - if @answer.errors.any?
-    = render 'shared/errors', object: @answer
-
-  = form_for [@question, @answer] do |f|
+  = form_for [@question, @answer], remote: true do |f|
     = f.label :body, 'answer'
     = f.text_field :body
     = f.submit 'Submit'
