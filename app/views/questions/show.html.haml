@@ -1,17 +1,19 @@
+.question
+  = render 'show_question'
+%hr
 .errors
-
-%h3= @question.title
-%p= @question.body
+%hr
 
 
 .answers
-  = render @question.answers
+  = render @question.answers.order(:the_best, :id)
 
 
-- if user_signed_in?
-  = form_for [@question, @answer], remote: true do |f|
-    = f.label :body, 'answer'
-    = f.text_field :body
-    = f.submit 'Submit'
-- else
-  %p please sign in/sign up for answer
+.answer-create
+  - if user_signed_in?
+    = form_for [@question, @answer], remote: true do |f|
+      = f.label :body, 'answer'
+      = f.text_area :body
+      = f.submit 'Submit'
+  - else
+    %p please sign in/sign up for answer

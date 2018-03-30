@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 
 feature 'delete answer' do
@@ -6,7 +6,7 @@ feature 'delete answer' do
   given(:question_answers) { create(:question_answers) }
   let(:user_with_answer) { create(:user_with_answer) }
 
-  scenario 'authenticated user can delete answer' do
+  scenario 'authenticated user can delete answer', js: true do
     sign_in(user_with_answer)
     answer_body = user_with_answer.answers.first.body
 
@@ -20,7 +20,7 @@ feature 'delete answer' do
     expect(page).to_not have_content answer_body
   end
 
-  scenario 'non-authenticated user can not delete answer' do
+  scenario 'non-authenticated user can not delete answer', js: true do
     visit question_path(question_answers)
 
     expect(page).to have_content question_answers.title

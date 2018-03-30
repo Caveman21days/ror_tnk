@@ -6,14 +6,17 @@ class QuestionsController < ApplicationController
     @questions = Question.all
   end
 
+
   def new
     @question = Question.new
   end
 
+
   def show
     @answer = Answer.new if current_user
-    @answers = @question.answers
+    # @answers = @question.answers.order(:id)
   end
+
 
   def create
     @question = current_user.questions.new(question_params)
@@ -26,9 +29,16 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def edit; end
 
-  def update; end
+  def update
+    if current_user.author_of?(@question)
+      @question.update(question_params)
+      flash[:notice] = 'Your question successfully edited!'
+    else
+      flash[:danger] = 'You are not owner of question!'
+    end
+  end
+
 
   def destroy
     if current_user.author_of?(@question)

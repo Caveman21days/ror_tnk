@@ -1,0 +1,6 @@
+<% if @answer.errors.any? %>
+  $('.errors').html('<%= j render 'shared/errors', object: @answer %>');
+<% else %>
+  $('.flash').html('<%= j render 'shared/flash' %>');
+  $('.answer-' + <%= @answer.id %>).remove();
+<% end %>
