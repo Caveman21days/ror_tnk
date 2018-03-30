@@ -1,6 +1,24 @@
-%ul
-  %li= answer.user.email
-  %li= answer.body
-  %li
-  - if user_signed_in? && current_user.author_of?(answer)
-    = link_to 'Delete', question_answer_path(@question, answer.id), method: :delete
+- if answer.persisted?
+  .div{ class: "answer-#{answer.id}" }
+    %ul
+      - if answer.the_best
+        %li
+          %h4= answer.user.email
+        %li
+          %h4= answer.body
+      -else
+        %li= answer.user.email
+        %li= answer.body
+
+      - if user_signed_in? && current_user.author_of?(answer)
+        %li
+          = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+          = link_to 'Delete', question_answer_path(@question, answer), method: :delete, remote: true
+      - if user_signed_in? && current_user.author_of?(@question)
+        %p= link_to 'Best!', set_the_best_path(id: answer, question_id: @question), remote: true
+
+        %p
+          = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+            = f.label :body, 'Answer'
+            = f.text_area :body
+            = f.submit 'Save'

@@ -1,0 +1,6 @@
+<% if @question.errors.any? %>
+  $('.errors').html('<%= j render 'shared/errors', object: @question %>');
+<% else %>
+  $('.flash').html('<%= j render 'shared/flash' %>');
+  $('.question').html('<%= j render 'show_question' %>');
+<% end %>

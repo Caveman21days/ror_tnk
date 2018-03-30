@@ -2,8 +2,7 @@
   $('.errors').html('<%= j render 'shared/errors', object: @answer %>');
 <% else %>
   $('.flash').html('<%= j render 'shared/flash' %>');
-  $('.answers').append('<%= j render @answer %>');
-  $('.answer-create #answer_body').val('');
+  $('.answer-' + <%= @answer.id %>).html('<%= j render @answer %>');
   $('.edit-answer-link').click(function(e) {
       e.preventDefault();
       $(this).hide();

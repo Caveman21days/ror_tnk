@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question
-  before_action :set_answer, only: [:edit, :update, :destroy]
+  before_action :set_answer, only: [:update, :destroy, :set_the_best]
 
 
   def create
@@ -13,19 +13,30 @@ class AnswersController < ApplicationController
     end
   end
 
-  def edit; end
 
-  def update; end
+  def update
+    if current_user.author_of?(@answer)
+      @answer.update(answer_params)
+      flash[:notice] = 'Your answer successfully edited!'
+    else
+      flash[:danger] = 'You are not owner of answer!'
+    end
+  end
+
 
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
       flash[:notice] = 'Your answer successfully deleted!'
-      redirect_to @question
     else
       flash[:danger] = 'Your answer was not destroyed!'
-      render 'questions/show'
     end
+  end
+
+
+  def set_the_best
+    @answer.set_the_best if current_user.author_of?(@question)
+    redirect_to @question
   end
 
 

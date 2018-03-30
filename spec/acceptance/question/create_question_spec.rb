@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 feature 'Create question' do
   given(:user) { create(:user) }
@@ -11,7 +11,7 @@ feature 'Create question' do
     click_on 'Ask question'
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'testtest'
-    click_on 'Create'
+    click_on 'Save'
 
     expect(page).to have_content 'Your question successfully created'
     expect(page).to have_content 'Test question'
@@ -32,7 +32,7 @@ feature 'Create question' do
 
     click_on 'Ask question'
     fill_in 'Body', with: 'testtest'
-    click_on 'Create'
+    click_on 'Save'
 
     expect(page).to have_content "Title can't be blank"
   end

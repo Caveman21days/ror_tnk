@@ -46,24 +46,91 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'user try to delete his own answer' do
       it 'should delete answer' do
-        expect { delete :destroy, params: { question_id: user_with_answer.question, id: user_with_answer.id } }.to change(user_with_answer.question.answers, :count).by(-1)
+        expect { delete :destroy, params: { question_id: user_with_answer.question, id: user_with_answer.id, format: :js } }.to change(user_with_answer.question.answers, :count).by(-1)
       end
 
       it 'redirects to question show view' do
-        delete :destroy, params: { question_id: user_with_answer.question, id: user_with_answer.id }
-        expect(response).to redirect_to question_path(user_with_answer.question)
+        delete :destroy, params: { question_id: user_with_answer.question, id: user_with_answer.id, format: :js }
+        expect(response).to render_template 'answers/destroy'
       end
     end
 
     context 'another user try delete answer' do
       it 'should not delete answer' do
-        expect { delete :destroy, params: { question_id: question.id, id: answer.id } }.to_not change(question.answers, :count)
+        expect { delete :destroy, params: { question_id: question.id, id: answer.id, format: :js } }.to_not change(question.answers, :count)
       end
 
       it 'redirects to log in' do
-        delete :destroy, params: { question_id: question.id, id: answer.id }
-        expect(response).to render_template 'questions/show'
+        delete :destroy, params: { question_id: question.id, id: answer.id, format: :js }
+        expect(response).to render_template 'answers/destroy'
       end
     end
   end
+
+
+  describe 'PATCH #update' do
+    sign_in_user
+    let(:answer) { create(:answer, question: question, user: @user) }
+    let(:answer2) { create(:answer, question: question) }
+
+    context 'user try to edit his own answer' do
+      it 'should update answer' do
+        patch :update, params: { question_id: answer.question, id: answer.id, answer: attributes_for(:answer), format: :js }
+        expect(assigns(:answer)).to eq answer
+      end
+
+      it 'changes answer attributes' do
+        patch :update, params: { question_id: answer.question, id: answer.id, answer: { body: 'new body' }, format: :js }
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+      it 'render update answer' do
+        patch :update, params: { question_id: answer.question, id: answer.id, answer: attributes_for(:answer), format: :js }
+        expect(response).to render_template 'answers/update'
+      end
+
+    end
+
+    context 'another user try update answer' do
+      it 'should not delete answer' do
+        patch :update, params: { question_id: answer2.question, id: answer2.id, answer: attributes_for(:answer), format: :js }
+        expect(response).to render_template 'answers/update'
+      end
+    end
+  end
+
+
+  describe 'GET #set_the_best' do
+    sign_in_user
+    let(:user_question) { create(:question_answers, user: @user) }
+
+    context 'author of question try to set the best answer' do
+
+      it 'should set the_best option to answer' do
+        get :set_the_best, params: { question_id: user_question, id: user_question.answers.first, format: :js }
+        # expect(assigns(:answer).the_best).to eq true
+      end
+
+    end
+  end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

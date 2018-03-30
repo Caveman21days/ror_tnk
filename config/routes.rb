@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   end
 
   root 'questions#index'
+  get 'set_the_best' => 'answers#set_the_best'
 end
