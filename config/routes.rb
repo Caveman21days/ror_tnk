@@ -2,9 +2,12 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :questions do
-    resources :answers
+    resources :answers do
+      member do
+        patch 'set_the_best'
+      end
+    end
   end
 
   root 'questions#index'
-  get 'set_the_best' => 'answers#set_the_best'
 end

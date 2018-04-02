@@ -11,7 +11,7 @@
         %li= answer.body
 
       - if user_signed_in? && current_user.author_of?(@question)
-        %p= link_to 'Best!', set_the_best_path(id: answer, question_id: @question), remote: true
+        %p= link_to 'Best!', set_the_best_question_answer_path(@question, answer), method: :patch, remote: true
 
       - if user_signed_in? && current_user.author_of?(answer)
         %li

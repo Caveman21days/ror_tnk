@@ -101,36 +101,15 @@ RSpec.describe AnswersController, type: :controller do
   end
 
 
-  describe 'GET #set_the_best' do
+  describe 'PATCH #set_the_best' do
     sign_in_user
     let(:user_question) { create(:question_answers, user: @user) }
 
     context 'author of question try to set the best answer' do
-
       it 'should set the_best option to answer' do
-        get :set_the_best, params: { question_id: user_question, id: user_question.answers.first, format: :js }
-        # expect(assigns(:answer).the_best).to eq true
+        patch :set_the_best, params: { question_id: user_question, id: user_question.answers.first, format: :js }
+        expect(assigns(:answer).the_best).to eq true
       end
-
     end
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

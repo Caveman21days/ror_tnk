@@ -3,9 +3,6 @@ class AnswersController < ApplicationController
   before_action :set_question
   before_action :set_answer, only: [:update, :destroy, :set_the_best]
 
-  # Такой себе костыль. Как его поправить? вроде я в том-же домене, фреймов нет. В чем суть - не пойму
-  protect_from_forgery except: :set_the_best
-
 
   def create
     @answer = current_user.answers.new(answer_params.merge({ question: @question }))

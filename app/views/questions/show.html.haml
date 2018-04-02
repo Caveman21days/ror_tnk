@@ -6,7 +6,7 @@
 
 
 .answers
-  = render @question.answers.order(:the_best, :id)
+  = render @question.answers.sorted
 
 
 .answer-create
