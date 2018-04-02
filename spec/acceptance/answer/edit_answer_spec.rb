@@ -13,14 +13,21 @@ feature 'Answer editing' do
   end
 
   describe 'Authenticated' do
-    scenario 'author try to edit answer', js: true do
+    before do
       sign_in(user)
       visit question_path(question)
+    end
 
+    scenario 'author can sees edit link' do
       within '.answers' do
         expect(page).to have_link 'Edit'
+      end
+    end
 
-        click_on 'Edit'
+    scenario 'author try to edit his answer', js: true do
+      click_on 'Edit'
+
+      within '.answers' do
         fill_in 'Answer', with: 'edited answer'
         click_on 'Save'
 
@@ -31,7 +38,6 @@ feature 'Answer editing' do
     end
 
     scenario 'user try to edit answer' do
-      sign_in(user)
       visit question_path(question_answers)
 
       within '.answers' do

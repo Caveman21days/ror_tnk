@@ -10,13 +10,13 @@
         %li= answer.user.email
         %li= answer.body
 
+      - if user_signed_in? && current_user.author_of?(@question)
+        %p= link_to 'Best!', set_the_best_path(id: answer, question_id: @question), remote: true
+
       - if user_signed_in? && current_user.author_of?(answer)
         %li
           = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
           = link_to 'Delete', question_answer_path(@question, answer), method: :delete, remote: true
-      - if user_signed_in? && current_user.author_of?(@question)
-        %p= link_to 'Best!', set_the_best_path(id: answer, question_id: @question), remote: true
-
         %p
           = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
             = f.label :body, 'Answer'
