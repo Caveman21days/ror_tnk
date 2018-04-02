@@ -13,5 +13,12 @@ RSpec.describe Answer, type: :model do
       answer.set_the_best
       expect(answer.the_best).to be_truthy
     end
+
+    it 'Then author set_the_best another answer' do
+      answer = question_with_answers.answers[1]
+      answer.set_the_best
+      expect(answer.the_best).to be_truthy
+      expect(question_with_answers.answers.first.the_best).to eq nil
+    end
   end
 end
