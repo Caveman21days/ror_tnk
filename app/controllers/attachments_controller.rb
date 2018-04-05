@@ -3,14 +3,12 @@ class AttachmentsController < ApplicationController
   before_action :set_attachable
 
 
-#Как по мне - так это крайне костыльно. Но, вроде,
-#
   def destroy
     if current_user && current_user.author_of?(@attachable)
       if @attachment.destroy
-        if @attachable.class.name == 'Question'
+        if @attachment.get_question
           redirect_to @attachable, notice: 'File successfully deleted!'
-        elsif @attachable.class.name == 'Answer'
+        elsif @attachment.get_answer
           @question = @attachable.question
         end
         flash[:notice] = 'File successfully deleted!'

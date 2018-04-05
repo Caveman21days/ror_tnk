@@ -6,7 +6,7 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
-  accepts_nested_attributes_for :attachments
+  accepts_nested_attributes_for :attachments, reject_if: :all_blank
 
   scope :sorted, -> { order(:the_best, created_at: :desc) }
 

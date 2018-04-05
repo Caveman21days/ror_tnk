@@ -9,7 +9,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # Или тут тоже хитро кастомно нужно?
   resources :attachments, only: [:destroy]
 
   root 'questions#index'
