@@ -5,7 +5,9 @@ RSpec.describe Answer, type: :model do
   it { should have_many :attachments }
 
   it { should validate_presence_of :body }
+
   it { should accept_nested_attributes_for :attachments}
+
 
   describe '#set_the_best' do
     let!(:user) { create(:user) }
