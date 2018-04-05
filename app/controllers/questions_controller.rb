@@ -13,8 +13,9 @@ class QuestionsController < ApplicationController
 
 
   def show
-    @answer = Answer.new if current_user
-    # @answers = @question.answers.order(:id)
+    if current_user
+      @answer = Answer.new
+    end
   end
 
 
@@ -61,6 +62,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, attachments_attributes: [:file])
   end
 end

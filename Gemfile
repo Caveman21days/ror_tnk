@@ -18,6 +18,10 @@ gem 'jbuilder', '~> 2.5'
 gem 'haml-rails'
 gem 'devise'
 gem 'jquery-rails'
+gem 'carrierwave'
+gem 'remotipart'
+gem 'cocoon'
+
 
 # gem 'therubyracer', platforms: :ruby
 # gem 'mysql2'
