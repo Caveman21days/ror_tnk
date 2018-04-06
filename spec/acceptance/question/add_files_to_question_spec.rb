@@ -35,8 +35,7 @@ feature 'Add files to question' do
 
   scenario 'user adds any files than asks question', js: true do
     visit new_question_path
-
-    save_and_open_page
+    
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'testtest'
 

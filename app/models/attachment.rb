@@ -4,12 +4,13 @@ class Attachment < ApplicationRecord
 
   mount_uploader :file, FileUploader
 
-  def get_question
-    return self.attachable if self.attachable.class.name == 'Question'
-  end
 
-  def get_answer
-    return self.attachable if self.attachable.class.name == 'Answer'
+  def question
+    if self.attachable.class.name == 'Question'
+      self.attachable
+    elsif self.attachable.class.name == 'Answer'
+      self.attachable.question
+    end
   end
 
 end
