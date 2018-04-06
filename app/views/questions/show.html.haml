@@ -8,12 +8,22 @@
 .answers
   = render @question.answers.sorted
 
-
 .answer-create
   - if user_signed_in?
     = form_for [@question, @answer], remote: true do |f|
       = f.label :body, 'answer'
       = f.text_area :body
-      = f.submit 'Submit'
+
+      %br
+      %p Attachments:
+
+      #attachments
+        = f.fields_for :attachments do |attachment|
+          = render 'shared/attachments', f: attachment
+        .links
+          = link_to_add_association 'add file', f, :attachments, partial: 'shared/attachments'
+      %br
+      = f.submit 'Save'
+
   - else
     %p please sign in/sign up for answer

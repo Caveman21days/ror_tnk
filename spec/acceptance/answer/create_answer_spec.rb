@@ -10,7 +10,7 @@ feature 'show question answers create' do
     visit question_path(question_answers)
 
     fill_in 'answer_body', with: 'test_answer_for_auth_user'
-    click_on 'Submit'
+    click_on 'Save'
 
     expect(current_path).to eq question_path(question_answers)
 
@@ -23,7 +23,7 @@ feature 'show question answers create' do
     sign_in(user)
     visit question_path(question_answers)
 
-    click_on 'Submit'
+    click_on 'Save'
 
     expect(page).to have_content "Body can't be blank"
   end

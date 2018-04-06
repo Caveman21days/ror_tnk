@@ -9,7 +9,6 @@ feature 'show question' do
     sign_in(user)
 
     visit question_path(question_answers)
-    # save_and_open_page
     expect(page).to have_content question_answers.title
   end
 

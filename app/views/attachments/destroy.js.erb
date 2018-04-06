@@ -1,0 +1,7 @@
+<% if @attachment.errors.any? %>
+  $('.errors').html('<%= j render 'shared/errors', object: @attachment %>');
+<% else %>
+  $('.flash').html('<%= j render 'shared/flash' %>');
+
+  $('.answer-' + <%= @attachment.attachable_id %>).html('<%= j render @attachment.attachable %>');
+<% end %>
