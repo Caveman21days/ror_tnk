@@ -1,6 +1,16 @@
 = form_for @question, { remote: @question.persisted?, html: { id: "edit-question-#{@question.id}" } } do |f|
   = f.label :title
   = f.text_field :title
+
   = f.label :body
   = f.text_area :body
+
+  %p Attachments:
+
+  #attachments
+    =  f.fields_for :attachments do |attachment|
+      = render 'shared/attachments', f: attachment
+    .links
+      = link_to_add_association 'add file', f, :attachments, partial: 'shared/attachments'
+
   = f.submit 'Save'

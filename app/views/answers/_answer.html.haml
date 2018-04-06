@@ -10,6 +10,12 @@
         %li= answer.user.email
         %li= answer.body
 
+      - answer.attachments.each do |a|
+        %li
+          = link_to a.file.identifier, a.file.url
+          - if current_user.author_of?(answer)
+            = link_to 'delete file', attachment_path(a), method: :delete, remote: true
+
       - if user_signed_in? && current_user.author_of?(@question)
         %p= link_to 'Best!', set_the_best_question_answer_path(@question, answer), method: :patch, remote: true
 
@@ -21,4 +27,10 @@
           = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
             = f.label :body, 'Answer'
             = f.text_area :body
+            #attachments
+              = f.fields_for :attachments do |attachment|
+                = render 'shared/attachments', f: attachment
+              .links
+                = link_to_add_association 'add file', f, :attachments, partial: 'shared/attachments'
+            %br
             = f.submit 'Save'
