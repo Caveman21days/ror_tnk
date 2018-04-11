@@ -112,4 +112,24 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+
+  # В общем понятия не имею, как это тестировать
+  # сделал так, думаю, достаточно протестить на одной модели(*но это не точно*)
+  describe 'POST #vote' do
+    sign_in_user
+    let(:question) { create(:question) }
+    let(:answer) { create(:answer, question: question) }
+
+    context 'user can vote for answer' do
+      it 'should add vote to answer' do
+        post :vote, params: { question_id: question, id: answer, vote: true, format: :json }
+        expect(response.status).to eq(200)
+      end
+
+      it 'should change count of answer votes' do
+        expect{ post :vote, params: { question_id: question, id: answer, vote: true, format: :json } }.to change(answer.votes, :count).by(1)
+      end
+    end
+  end
 end
