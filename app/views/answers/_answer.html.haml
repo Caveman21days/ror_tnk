@@ -1,5 +1,5 @@
 - if answer.persisted?
-  .div{ class: "answer-#{answer.id}" }
+  %div{ class: "answer-#{answer.id}" }
     %ul
       - if answer.the_best
         %li
@@ -16,13 +16,27 @@
           - if current_user.author_of?(answer)
             = link_to 'delete file', attachment_path(a), method: :delete, remote: true
 
+
       - if user_signed_in? && current_user.author_of?(@question)
         %p= link_to 'Best!', set_the_best_question_answer_path(@question, answer), method: :patch, remote: true
+
+
+      - if user_signed_in? && !current_user.author_of?(answer)
+        %div{ class: 'voting' }
+          %p
+            %div{ class: "vote-links-#{answer.id}" }
+              = link_to 'vote up!', vote_question_answer_path(@question, answer, user_vote: true), method: :post, remote: true, class: "vote-answer-link", data: { answer_id: answer.id }
+              = link_to 'vote for!', vote_question_answer_path(@question, answer, user_vote: false), method: :post, remote: true, class: "vote-answer-link", data: { answer_id: answer.id }
+            %div{ class: "vote-#{answer.id}" }
+              %p= "#{answer.voting_result[:positive_count]} (#{answer.voting_result[:positive_persent]}%) / #{answer.voting_result[:negative_count]} (#{answer.voting_result[:negative_persent]}%) | #{answer.voting_result[:result]}"
+
 
       - if user_signed_in? && current_user.author_of?(answer)
         %li
           = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
           = link_to 'Delete', question_answer_path(@question, answer), method: :delete, remote: true
+
+
         %p
           = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
             = f.label :body, 'Answer'
