@@ -27,7 +27,7 @@ feature 'Vote for question' do
       end
 
       within ".vote-#{question.id}" do
-        expect(page).to have_content '1 (100%) / 0 (0%) | +1'
+        expect(page).to have_content '1 (100%) / 0 (0%) | 1'
       end
     end
 
@@ -43,7 +43,7 @@ feature 'Vote for question' do
         expect(page).to have_link 'vote up!'
         expect(page).to have_link 'vote for!'
         click_on 'vote up!'
-        expect(page).to have_content '1 (100%) / 0 (0%) | +1'
+        expect(page).to have_content '1 (100%) / 0 (0%) | 1'
         click_on 'vote for!'
         expect(page).to have_content '0 (0%) / 1 (100%) | -1'
       end
