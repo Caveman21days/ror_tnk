@@ -8,7 +8,8 @@ RSpec.describe Answer, type: :model do
 
   it { should validate_presence_of :body }
 
-  it { should accept_nested_attributes_for :attachments}
+  it { should accept_nested_attributes_for :attachments }
+
 
   describe '#set_the_best' do
     let!(:user) { create(:user) }
@@ -32,43 +33,59 @@ RSpec.describe Answer, type: :model do
     end
   end
 
+
   describe '#to_vote' do
     let!(:user) { create(:user) }
     let!(:question_with_answers) { create(:question_answers) }
 
-    it 'should create the first vote' do
-      answer = question_with_answers.answers.first
-      expect { answer.to_vote('true', user) }.to change(answer.votes, :count).by(1)
+    context 'non-votes' do
+      it 'creates the first vote' do
+        answer = question_with_answers.answers.first
+        expect { answer.to_vote(true, user) }.to change(answer.votes, :count).by(1)
+      end
+
+      it 'destroys user vote if type of vote eq existing vote' do
+        answer = question_with_answers.answers.first
+        answer.to_vote(true, user)
+        expect(answer.votes.first.vote).to eq true
+      end
     end
 
-    it 'should destroy user vote if type of vote eq existing vote' do
-      current_user = user
+    context 'with votes' do
+      it 'creates the first vote' do
+        answer = question_with_answers.answers.first
+        answer.votes.create(vote: true, user: user)
+        vote = answer.votes.first
+        answer.to_vote(false, user)
+        expect(answer.votes.first).to_not eq vote
+      end
 
-      answer = question_with_answers.answers.first
-
-      expect { answer.to_vote(true, current_user) }.to change(answer.votes, :count).by(1)
-      expect(answer.to_vote(true, user)).to be_truthy
+      it 'destroys user vote if type of vote eq existing vote' do
+        answer = question_with_answers.answers.first
+        answer.votes.create(vote: true, user: user)
+        answer.to_vote(false, user)
+        expect(answer.votes.first.vote).to eq false
+      end
     end
   end
 
+
   describe '#voting_result' do
-    let!(:user) { create(:user) }
+    let!(:user1) { create(:user) }
+    let!(:user2) { create(:user) }
+    let!(:user3) { create(:user) }
+
     let!(:question_with_answers) { create(:question_answers) }
 
-    it 'should create the first vote' do
+    it 'calculates voting result' do
       answer = question_with_answers.answers.first
-      answer.to_vote('true', user)
-      hash = { :positive_count=>1, :negative_count=>0, :positive_persent=>100.0, :negative_persent=>0.0, :result=>"+1" }
+      answer.to_vote(true, user1)
+      answer.to_vote(true, user2)
+      answer.to_vote(false, user3)
+
+      hash = {:positive_count=>2, :negative_count=>1, :result=>"1", :positive_persent=>66, :negative_persent=>33}
 
       expect(answer.voting_result).to eq hash
-    end
-
-    it 'should destroy user vote if type of vote eq existing vote' do
-      current_user = user
-      answer = question_with_answers.answers.first
-
-      expect { answer.to_vote(true, current_user) }.to change(answer.votes, :count).by(1)
-      expect(answer.to_vote(true, user)).to be_truthy
     end
   end
 end

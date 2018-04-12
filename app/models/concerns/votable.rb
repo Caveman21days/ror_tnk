@@ -7,48 +7,32 @@ module Votable
 
 
   def to_vote(user_vote, current_user)
-    if current_user.votes.any? { |vote| vote.votable_id == self.id }
-      v = current_user.votes.find_by(votable_id: self.id)
+    v = self.votes.find_by(user: current_user)
+    unless v.nil?
       v.destroy
-      return true if v.vote.to_s == user_vote
+      return true if v.vote == user_vote
     end
 
-    self.votes.create(user_id: current_user.id, vote: user_vote)
+    self.votes.create(user: current_user, vote: user_vote)
   end
 
 
 
   def voting_result
-    votes = self.votes.count
-    if votes != 0
-      positive_votes = self.votes.where(vote: true).count
-      negative_votes = self.votes.where(vote: false).count
+    votes = self.votes
 
-      positive_persent = (positive_votes.to_f/votes)*100
-      negative_persent = (negative_votes.to_f/votes)*100
+    result_of_voting = { positive_count: votes.where(vote: true).count,
+                         negative_count: votes.where(vote: false).count,
+                         result: (votes.where(vote: true).count - self.votes.where(vote: false).count).to_s }
 
-      r = positive_votes - negative_votes
-
-      if r > 0
-        result = "+#{r}"
-      elsif r < 0
-        result = "#{r}"
-      else
-        result = 0.0
-      end
-
-      result_of_voting = { positive_count: positive_votes,
-                       negative_count: negative_votes,
-                       positive_persent: positive_persent,
-                       negative_persent: negative_persent,
-                       result: result }
+    if votes.count == 0
+      result_of_voting[:positive_persent] = 0
+      result_of_voting[:negative_persent] = 0
     else
-      result_of_voting = { positive_count: 0,
-                           negative_count: 0,
-                           positive_persent: 0,
-                           negative_persent: 0,
-                           result: 0 }
+      result_of_voting[:positive_persent] = (result_of_voting[:positive_count].to_f/votes.count*100).to_i
+      result_of_voting[:negative_persent] = (result_of_voting[:negative_count].to_f/votes.count*100).to_i
     end
+
     return result_of_voting
   end
 end
