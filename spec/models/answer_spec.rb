@@ -37,15 +37,14 @@ RSpec.describe Answer, type: :model do
   describe '#to_vote' do
     let!(:user) { create(:user) }
     let!(:question_with_answers) { create(:question_answers) }
+    let!(:answer) { question_with_answers.answers.first }
 
     context 'non-votes' do
       it 'creates the first vote' do
-        answer = question_with_answers.answers.first
         expect { answer.to_vote(true, user) }.to change(answer.votes, :count).by(1)
       end
 
-      it 'destroys user vote if type of vote eq existing vote' do
-        answer = question_with_answers.answers.first
+      it 'checks that given user_vote to method eq user vote in db' do
         answer.to_vote(true, user)
         expect(answer.votes.first.vote).to eq true
       end
@@ -53,15 +52,13 @@ RSpec.describe Answer, type: :model do
 
     context 'with votes' do
       it 'creates the first vote' do
-        answer = question_with_answers.answers.first
         answer.votes.create(vote: true, user: user)
         vote = answer.votes.first
         answer.to_vote(false, user)
         expect(answer.votes.first).to_not eq vote
       end
 
-      it 'destroys user vote if type of vote eq existing vote' do
-        answer = question_with_answers.answers.first
+      it 'checks that given user_vote to method is right' do
         answer.votes.create(vote: true, user: user)
         answer.to_vote(false, user)
         expect(answer.votes.first.vote).to eq false
@@ -83,7 +80,7 @@ RSpec.describe Answer, type: :model do
       answer.to_vote(true, user2)
       answer.to_vote(false, user3)
 
-      hash = {:positive_count=>2, :negative_count=>1, :result=>"1", :positive_persent=>66, :negative_persent=>33}
+      hash = { :positive_count=>2, :negative_count=>1, :result=>"1", :positive_persent=>66.67, :negative_persent=>33.33 }
 
       expect(answer.voting_result).to eq hash
     end

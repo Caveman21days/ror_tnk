@@ -56,7 +56,7 @@ RSpec.describe Question, type: :model do
       question.to_vote(true, user2)
       question.to_vote(false, user3)
 
-      hash = {:positive_count=>2, :negative_count=>1, :result=>"1", :positive_persent=>66, :negative_persent=>33}
+      hash = { :positive_count=>2, :negative_count=>1, :result=>"1", :positive_persent=>66.67, :negative_persent=>33.33 }
 
       expect(question.voting_result).to eq hash
     end

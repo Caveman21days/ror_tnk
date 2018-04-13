@@ -8,7 +8,7 @@ module Votable
 
   def to_vote(user_vote, current_user)
     v = self.votes.find_by(user: current_user)
-    unless v.nil?
+    if !v.nil?
       v.destroy
       return true if v.vote == user_vote
     end
@@ -23,14 +23,13 @@ module Votable
 
     result_of_voting = { positive_count: votes.where(vote: true).count,
                          negative_count: votes.where(vote: false).count,
-                         result: (votes.where(vote: true).count - self.votes.where(vote: false).count).to_s }
+                         result: (votes.where(vote: true).count - self.votes.where(vote: false).count).to_s,
+                         positive_persent: 0,
+                         negative_persent: 0 }
 
-    if votes.count == 0
-      result_of_voting[:positive_persent] = 0
-      result_of_voting[:negative_persent] = 0
-    else
-      result_of_voting[:positive_persent] = (result_of_voting[:positive_count].to_f/votes.count*100).to_i
-      result_of_voting[:negative_persent] = (result_of_voting[:negative_count].to_f/votes.count*100).to_i
+    if votes.count != 0
+      result_of_voting[:positive_persent] = (result_of_voting[:positive_count].to_f/votes.count*100).round(2)
+      result_of_voting[:negative_persent] = (result_of_voting[:negative_count].to_f/votes.count*100).round(2)
     end
 
     return result_of_voting
