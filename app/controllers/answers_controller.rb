@@ -55,4 +55,15 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body, attachments_attributes: [:file])
   end
+
+  def publish_question
+    return if @answer.errors.any?
+    ActionCable.server.broadcast(
+        "answers_#{@question.id}",
+        ApplicationController.render_with_signed_in_user(
+            current_user,
+            json: { answer: @answer }
+        )
+    )
+  end
 end

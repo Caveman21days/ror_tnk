@@ -1,9 +1,7 @@
 .question
-  = render 'show_question'
-%hr
-.errors
-%hr
+  = render @question
 
+.errors
 
 .answers
   = render @question.answers.sorted

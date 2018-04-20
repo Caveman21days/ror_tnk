@@ -8,9 +8,9 @@ module Votable
 
   def to_vote(user_vote, current_user)
     v = self.votes.find_by(user: current_user)
-    if !v.nil?
+    unless v.nil?
       v.destroy
-      return true if v.vote == user_vote
+      return true if v.vote.to_s == user_vote
     end
 
     self.votes.create(user: current_user, vote: user_vote)

@@ -2,13 +2,6 @@ class AttachmentsController < ApplicationController
   before_action :set_attachment
   before_action :set_attachable
 
-  # я просто не могу понять, зачем тут было выносить
-  # метод отдельный, мне в любом случае в зависимотси от
-  # типа объекта нужно разное поведение, а из метода модели я не могу сделать редирект
-  #
-  # Я конечно написал метод, который вернет вопрос, но если я удаляю ответ, мне
-  # не нужен редирект, мне нужен рендер js
-  # Из модели я не могу делать эти проверки и мне все равно придется делать их тут
 
   def destroy
     if current_user && current_user.author_of?(@attachable)
@@ -26,7 +19,6 @@ class AttachmentsController < ApplicationController
       end
     end
   end
-
 
 
 

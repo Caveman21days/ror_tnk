@@ -1,4 +1,4 @@
 - if @question.errors.any?
   = render 'shared/errors', object: @question
 
-= render 'form'
+= render 'form', question: @question

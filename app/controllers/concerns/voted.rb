@@ -24,10 +24,6 @@ module Voted
 
   private
 
-  # def user_vote
-  #   @user_vote = params[:user_vote]
-  # end
-
   def model_klass
     controller_name.classify.constantize
   end
