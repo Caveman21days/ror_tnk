@@ -1,0 +1,33 @@
+div class = "answer-#{@answer.id}"
+  ul
+    - if @answer.the_best
+      li
+        h4 = @author_of_answer.email
+      li
+        h4 = @answer.body
+    - else
+      li = @author_of_answer.email
+      li = @answer.body
+
+    - for a in @attachments
+      li
+        a href="#{a.file.url}" = a.file.url.substring(a.file.url.lastIndexOf('/')+1)
+        - if gon.user_id == @answer.user_id
+          a data-remote="true" rel="nofollow" data-method="delete" href="/attachments/#{@attachment.id}" delete file
+
+    - if gon.user_id && gon.user_id == @answer.question_id
+      p
+        a data-remote="true" rel="nofollow" data-method="patch" href="/questions/119/answers/#{@answer.id}/set_the_best" Best!
+
+
+    - if gon.user_id && gon.user_id != @answer.user_id
+      div class = 'voting'
+        p
+          div class = "vote-links-#{@answer.id}"
+            a class="vote-answer-link" data-answer-id="#{@answer.id}" data-remote="true" rel="nofollow" data-method="post" href="/questions/#{@answer.question_id}/answers/#{@answer.id}/vote?user_vote=true" vote up!
+            a class="vote-answer-link" data-answer-id="#{@answer.id}" data-remote="true" rel="nofollow" data-method="post" href="/questions/#{@answer.question_id}/answers/#{@answer.id}/vote?user_vote=false" vote for!
+
+    - if gon.user_id && gon.user_id == @answer.user_id
+      li
+        a class="edit-answer-link" data-answer-id="#{@answer.id}" href="" Edit
+        a data-remote="true" rel="nofollow" data-method="delete" href="/questions/#{@answer.question_id}/answers/#{@answer.id}" Delete

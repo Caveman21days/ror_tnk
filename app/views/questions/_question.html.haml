@@ -1,8 +1,9 @@
 %hr
 %div{ class: "question-#{question.id}" }
   %h3= link_to question.title, question_path(question)
-  - if user_signed_in? && current_user.author_of?(question)
-    = link_to 'Delete', question_path(question), method: :delete
+  - if action_name == 'show'
+    %p= question.body
+
 
   - if user_signed_in? && !current_user.author_of?(question)
     %div{ class: 'voting' }
@@ -14,6 +15,7 @@
           %div{ class: "vote-#{question.id}" }
             %p= "#{question.voting_result[:positive_count]} (#{question.voting_result[:positive_persent]} %) / #{question.voting_result[:negative_count]} (#{question.voting_result[:negative_persent]}%) | #{question.voting_result[:result]}"
 
+
   - if question.attachments.any?
     %p Attachments:
     %ul
@@ -23,7 +25,14 @@
           %li= link_to 'delete file', attachment_path(a), method: :delete
 
 
-- if user_signed_in? && current_user.author_of?(question)
-  %p= link_to 'Edit', '', class: 'edit-question-link', data: { question_id: question.id }
-  = render 'questions/form', question: question
+  - if user_signed_in? && current_user.author_of?(question)
+    = link_to 'Delete', question_path(question), method: :delete
+
+  - if user_signed_in? && current_user.author_of?(question) && action_name == 'show'
+    %p= link_to 'Edit', '', class: 'edit-question-link', data: { question_id: question.id }
+    = render 'questions/form', question: question
+
+
+  -if action_name == 'show'
+    = render 'shared/comment', commentable: question
 %hr
