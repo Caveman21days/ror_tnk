@@ -42,7 +42,7 @@ feature 'Answer editing' do
 
       within '.answers' do
         expect(page).to_not have_link 'Edit'
-        expect(page).to_not have_selector 'textarea'
+        expect(page).to_not have_selector 'answer_body'
       end
     end
   end

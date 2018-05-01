@@ -52,6 +52,5 @@ RSpec.configure do |config|
     Capybara::Selenium::Driver.new(app, :browser => :chrome, :http_client => client)
   end
 
-
   Capybara.javascript_driver = :chrome
 end

@@ -1,0 +1,6 @@
+hr
+div class="question-#{@id}"
+  h3
+    a href="questions/#{@id}" #{@title}
+    - if gon.user_id && @user_id == gon.user_id
+      a href="questions/#{@id}" data-method="delete" Delete

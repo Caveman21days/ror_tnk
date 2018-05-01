@@ -1,10 +1,10 @@
 class AnswersController < ApplicationController
   include Voted
-
+  
   before_action :authenticate_user!
-  before_action :set_question
-  before_action :set_answer, only: [:update, :destroy, :set_the_best]
-
+  before_action :set_question, only: [:create]
+  before_action :set_answer, except: :create
+  after_action :publish_answer, only: [:create]
 
   def create
     @answer = current_user.answers.new(answer_params.merge({ question: @question }))
@@ -37,6 +37,7 @@ class AnswersController < ApplicationController
 
 
   def set_the_best
+    @question = @answer.question
     @answer.set_the_best if current_user.author_of?(@question)
   end
 
@@ -54,5 +55,18 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body, attachments_attributes: [:file])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+    ActionCable.server.broadcast(
+        "answers_#{@question.id}",
+        ApplicationController.render_with_signed_in_user(
+            current_user,
+            json: { answer: @answer,
+                    author_of_answer: @answer.user,
+                    attachments: @answer.attachments }
+        )
+    )
   end
 end

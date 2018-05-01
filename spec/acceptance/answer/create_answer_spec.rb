@@ -39,3 +39,37 @@ feature 'show question answers create' do
     expect(page).to_not have_content 'answer_body'
   end
 end
+
+feature 'multiple sessions', :js do
+  given(:user) { create(:user) }
+  given(:question) { create(:question) }
+
+  scenario "answer appears on another user's page" do
+    Capybara.using_session('user') do
+      sign_in(user)
+      visit question_path(question)
+    end
+
+    Capybara.using_session('guest') do
+      visit question_path(question)
+    end
+
+    Capybara.using_session('user') do
+      fill_in 'answer_body', with: 'test_answer_for_auth_user'
+      click_on 'Save'
+
+      expect(current_path).to eq question_path(question)
+
+      within '.answers' do
+        expect(page).to have_content 'test_answer_for_auth_user'
+      end
+    end
+
+    Capybara.using_session('guest') do
+      within '.answers' do
+        expect(page).to have_content 'test_answer_for_auth_user'
+      end
+    end
+  end
+end
+

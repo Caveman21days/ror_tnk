@@ -21,6 +21,8 @@ gem 'jquery-rails'
 gem 'carrierwave'
 gem 'remotipart'
 gem 'cocoon'
+gem 'gon'
+gem 'skim'
 
 
 

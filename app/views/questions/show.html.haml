@@ -1,9 +1,7 @@
-.question
-  = render 'show_question'
-%hr
-.errors
-%hr
+.question{ data: { question_id: @question.id } }
+  = render @question
 
+.errors
 
 .answers
   = render @question.answers.sorted

@@ -3,6 +3,8 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
+  questions = $('.questions')
+
   $('.edit-question-link').click (e) ->
     e.preventDefault();
     $(this).hide();
@@ -14,3 +16,12 @@ $ ->
     question_id = $(this).data('questionId')
     vote = e.detail[0]
     $('.vote-' + question_id).html('<p>' + vote.positive_count + ' (' + vote.positive_persent + '%) ' + ' / ' + vote.negative_count + ' (' + vote.negative_persent + '%) ' + ' | ' + vote.result + '</p>')
+
+  App.cable.subscriptions.create('QuestionsChannel', {
+  connected: ->
+    @perform 'follow',
+
+  received: (data) ->
+    data = $.parseJSON(data)
+    questions.append(JST['templates/questions'](data.question))
+  })
