@@ -10,7 +10,6 @@ class AnswersController < ApplicationController
 
   respond_to :js
 
-
   def create
     respond_with(@answer = current_user.answers.create(answer_params.merge(question: @question)))
   end
@@ -27,6 +26,7 @@ class AnswersController < ApplicationController
 
 
   def set_the_best
+    @question = @answer.question
     @answer.set_the_best if current_user.author_of?(@question)
     respond_with @answer
   end

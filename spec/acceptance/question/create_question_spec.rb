@@ -58,6 +58,7 @@ feature 'multiple sessions', :js do
       click_on 'Save'
 
       expect(page).to have_content 'Question was successfully created.'
+
       expect(page).to have_content 'Test question'
       expect(page).to have_content 'testtest'
     end
