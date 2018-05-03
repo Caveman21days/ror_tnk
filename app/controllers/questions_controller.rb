@@ -6,52 +6,39 @@ class QuestionsController < ApplicationController
 
   after_action :publish_question, only: [:create]
 
+  respond_to :js, only: :update
+
+
   def index
-    @questions = Question.all
     gon.question = Question.last
+    respond_with(@questions = Question.all.sorted)
   end
 
 
   def new
-    @question = Question.new
+    respond_with(@question = Question.new)
   end
 
 
   def show
     @answer = Answer.new if current_user
+    respond_with(@question)
   end
 
 
   def create
-    @question = current_user.questions.new(question_params)
-    if @question.save
-      flash[:notice] = 'Your question successfully created'
-      redirect_to @question
-    else
-      flash[:danger] = 'Your question was not created!'
-      render :new
-    end
+    respond_with(@question = current_user.questions.create(question_params))
   end
 
 
   def update
-    if current_user.author_of?(@question)
-      @question.update(question_params)
-      flash[:notice] = 'Your question successfully edited!'
-    else
-      flash[:danger] = 'You are not owner of question!'
-    end
+    @question.update(question_params) if current_user.author_of?(@question)
+    respond_with(@question)
   end
 
 
   def destroy
-    if current_user.author_of?(@question)
-      @question.destroy
-      flash[:notice] = 'Question successfully deleted!'
-    else
-      flash[:danger] = 'Your question was not deleted!'
-    end
-    redirect_to questions_path
+    respond_with @question.destroy if current_user.author_of?(@question)
   end
 
 
@@ -63,9 +50,11 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
   end
 
+
   def question_params
     params.require(:question).permit(:title, :body, attachments_attributes: [:file])
   end
+
 
   def publish_question
     return if @question.errors.any?

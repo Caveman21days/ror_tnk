@@ -4,41 +4,31 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: [:create]
   before_action :set_answer, except: :create
+  before_action :load_question, only: :set_the_best
+
   after_action :publish_answer, only: [:create]
 
+  respond_to :js
+
+
   def create
-    @answer = current_user.answers.new(answer_params.merge({ question: @question }))
-    if @answer.save
-      flash[:notice] = 'Your answer successfully created'
-    else
-      flash[:danger] = 'Your answer was not created!'
-    end
+    respond_with(@answer = current_user.answers.create(answer_params.merge(question: @question)))
   end
 
 
   def update
-    if current_user.author_of?(@answer)
-      @answer.update(answer_params)
-      flash[:notice] = 'Your answer successfully edited!'
-    else
-      flash[:danger] = 'You are not owner of answer!'
-    end
+    respond_with @answer.update(answer_params) if current_user.author_of?(@answer)
   end
 
 
   def destroy
-    if current_user.author_of?(@answer)
-      @answer.destroy
-      flash[:notice] = 'Your answer successfully deleted!'
-    else
-      flash[:danger] = 'Your answer was not destroyed!'
-    end
+    respond_with @answer.destroy if current_user.author_of?(@answer)
   end
 
 
   def set_the_best
-    @question = @answer.question
     @answer.set_the_best if current_user.author_of?(@question)
+    respond_with @answer
   end
 
 
@@ -51,6 +41,10 @@ class AnswersController < ApplicationController
 
   def set_question
     @question = Question.find(params[:question_id])
+  end
+
+  def load_question
+    @question = @answer.question
   end
 
   def answer_params

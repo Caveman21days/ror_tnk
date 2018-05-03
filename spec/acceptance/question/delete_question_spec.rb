@@ -12,7 +12,7 @@ feature 'Delete question' do
 
     click_on 'Delete'
 
-    expect(page).to have_content 'Question successfully deleted!'
+    expect(page).to have_content 'Question was successfully destroyed.'
     expect(page).to_not have_content question_title
   end
 

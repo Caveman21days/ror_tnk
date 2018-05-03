@@ -23,7 +23,7 @@ gem 'remotipart'
 gem 'cocoon'
 gem 'gon'
 gem 'skim'
-
+gem 'responders', '~> 2.0'
 
 # gem 'therubyracer', platforms: :ruby
 # gem 'mysql2'
