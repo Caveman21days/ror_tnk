@@ -13,7 +13,7 @@ feature 'Create question' do
     fill_in 'Body', with: 'testtest'
     click_on 'Save'
 
-    expect(page).to have_content 'Your question successfully created'
+    expect(page).to have_content 'Question was successfully created.'
     expect(page).to have_content 'Test question'
     expect(page).to have_content 'testtest'
   end
@@ -57,7 +57,8 @@ feature 'multiple sessions', :js do
       fill_in 'Body', with: 'testtest'
       click_on 'Save'
 
-      expect(page).to have_content 'Your question successfully created'
+      expect(page).to have_content 'Question was successfully created.'
+
       expect(page).to have_content 'Test question'
       expect(page).to have_content 'testtest'
     end

@@ -10,7 +10,8 @@
     - if user_signed_in?
       = link_to 'add comment', '', class: 'add-comment-link', data: { comment_id: commentable.id }
 
-      = form_for [commentable, commentable.comments.build], html: { id: "comment-form-#{commentable.id}" }, remote: true do |f|
+
+      = form_for [commentable, commentable.comments.build], html: { id: "comment-form-#{commentable.id}" }, data: { type: :json }, remote: true do |f|
         = f.label :body, 'Comment:'
         = f.text_area :body
         = f.submit 'Save'

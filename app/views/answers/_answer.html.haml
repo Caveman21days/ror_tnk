@@ -31,21 +31,10 @@
         %p= "#{answer.voting_result[:positive_count]} (#{answer.voting_result[:positive_persent]}%) / #{answer.voting_result[:negative_count]} (#{answer.voting_result[:negative_persent]}%) | #{answer.voting_result[:result]}"
 
 
-      - if user_signed_in? && !current_user.author_of?(answer)
-        %div{ class: 'voting' }
-          %p
-            %div{ class: "vote-links-#{answer.id}" }
-              = link_to 'vote up!', vote_question_answer_path(@question, answer, user_vote: true), method: :post, remote: true, class: "vote-answer-link", data: { answer_id: answer.id }
-              = link_to 'vote for!', vote_question_answer_path(@question, answer, user_vote: false), method: :post, remote: true, class: "vote-answer-link", data: { answer_id: answer.id }
-            %div{ class: "vote-#{answer.id}" }
-              %p= "#{answer.voting_result[:positive_count]} (#{answer.voting_result[:positive_persent]}%) / #{answer.voting_result[:negative_count]} (#{answer.voting_result[:negative_persent]}%) | #{answer.voting_result[:result]}"
-
-
       - if user_signed_in? && current_user.author_of?(answer)
         %li
           = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
           = link_to 'Delete', answer_path(answer), method: :delete, remote: true
-
 
         %p
           = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|

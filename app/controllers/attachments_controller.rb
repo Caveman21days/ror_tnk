@@ -2,6 +2,8 @@ class AttachmentsController < ApplicationController
   before_action :set_attachment
   before_action :set_attachable
 
+  
+  # Не думаю, что тут имеет место responders
 
   def destroy
     if current_user && current_user.author_of?(@attachable)
