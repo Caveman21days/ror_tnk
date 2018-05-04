@@ -13,7 +13,6 @@ class QuestionsController < ApplicationController
   def index
     gon.question = Question.last
     respond_with(@questions = Question.all.sorted)
-
   end
 
 
