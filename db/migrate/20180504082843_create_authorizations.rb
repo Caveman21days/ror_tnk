@@ -4,7 +4,6 @@ class CreateAuthorizations < ActiveRecord::Migration[5.1]
       t.references :user, foreign_key: true
       t.string :provider
       t.string :uid
-      t.string :email
 
       t.timestamps
     end
