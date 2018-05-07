@@ -28,7 +28,7 @@ gem 'responders', '~> 2.0'
 gem 'omniauth'
 gem 'omniauth-vkontakte'
 gem 'omniauth-twitter'
-
+gem 'letter_opener', :group => :development
 
 
 # gem 'therubyracer', platforms: :ruby
