@@ -18,7 +18,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
         set_flash_message(:notice, :success, kind: 'vkontakte') if is_navigational_format?
       end
     else
-      session[:email_confirmation] = { provider: request.env['omniauth.auth'].provider, uid: request.env['omniauth.auth'].uid }
+      session[:auth] = {
+        provider: request.env['omniauth.auth'].provider,
+        uid: request.env['omniauth.auth'].uid
+      }
       render 'shared/email_confirmation'
     end
   end

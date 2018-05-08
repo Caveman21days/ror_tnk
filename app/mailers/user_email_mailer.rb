@@ -1,8 +1,9 @@
 class UserEmailMailer < ApplicationMailer
-  default from: 'from@qna.com'
+  default from: 'putin@naumen.ru'
 
   def confirm_email
-    @url = '127.0.0.1:3000/email_confirmation'
+    @url = 'localhost:3000/confirmation/'
+    @token = params[:token]
     mail(to: params[:email])
   end
 end

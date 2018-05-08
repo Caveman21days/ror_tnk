@@ -6,7 +6,8 @@ class User < ApplicationRecord
 
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:vkontakte, :twitter]
+         :recoverable, :rememberable, :trackable, :validatable,
+         :omniauthable, omniauth_providers: [:vkontakte, :twitter]
 
 
   def author_of?(obj)
@@ -16,11 +17,11 @@ class User < ApplicationRecord
 
   def self.find_for_oauth(auth)
     authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
-    return authorization.user if authorization
+    return authorization.user if authorization && authorization.user.confirmed_at
 
     if auth.info[:email]
       email = auth.info[:email]
-      user = User.where(email: email).first
+      user = User.where(email: email).where.not(confirmed_at: nil).first
 
       if user
         user.create_authorization(auth)
@@ -29,13 +30,32 @@ class User < ApplicationRecord
         user = User.create!(email: email, password: password, password_confirmation: password)
         user.create_authorization(auth)
       end
-
       return user
+    else
+      return nil
     end
   end
 
 
   def create_authorization(auth)
     self.authorizations.create(provider: auth.provider, uid: auth.uid)
+  end
+
+
+  def self.user_with_unconfirmed_authorization(email)
+    user = User.where(email: email, confirmed_at: nil).first
+    password = Devise.friendly_token[0, 20]
+
+    if user
+      user.update!(confirmation_token: Devise.token_generator.generate(User, :confirmation_token))
+    else
+      user = User.create!(
+        email: email,
+        password: password,
+        password_confirmation: password,
+        confirmation_token: Devise.token_generator.generate(User, :confirmation_token)
+      )
+    end
+    user
   end
 end
