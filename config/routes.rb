@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
+  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks', confirmation: 'confirmation' }
 
   root 'questions#index'
-  post 'email_confirmation' => 'confirmation#send_confirmation_of_email'
+  get 'confirmation' => 'confirmation#confirmation'
+  post 'send_confirmation_of_email' => 'confirmation#send_confirmation_of_email'
 
 
   concern :votable do

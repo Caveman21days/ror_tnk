@@ -1,6 +1,6 @@
 %h4 Please enter your email for confirmation
 
-= form_tag("/email_confirmation", method: "post") do
+= form_tag("/send_confirmation_of_email", method: "post") do
   = label_tag(:email, "Email")
   = text_field_tag(:email)
   = submit_tag("Send")
