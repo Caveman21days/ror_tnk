@@ -43,17 +43,17 @@ class User < ApplicationRecord
 
 
   def self.user_with_unconfirmed_authorization(email)
-    user = User.where(email: email, confirmed_at: nil).first
+    user = User.where(email: email).first
     password = Devise.friendly_token[0, 20]
 
     if user
-      user.update!(confirmation_token: Devise.token_generator.generate(User, :confirmation_token))
+      user.update!(confirmation_token: Devise.token_generator.generate(User, :confirmation_token)[1])
     else
       user = User.create!(
         email: email,
         password: password,
         password_confirmation: password,
-        confirmation_token: Devise.token_generator.generate(User, :confirmation_token)
+        confirmation_token: Devise.token_generator.generate(User, :confirmation_token)[1]
       )
     end
     user

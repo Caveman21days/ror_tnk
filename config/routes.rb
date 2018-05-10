@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks', confirmation: 'confirmation' }
+  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 
   root 'questions#index'
   get 'confirmation' => 'confirmation#confirmation'

@@ -7,9 +7,11 @@ class ConfirmationController < ApplicationController
     auth.provider = session[:auth]['provider']
     auth.uid = session[:auth]['uid']
 
-    @user.create_authorization(auth)
+    @user.create_authorization(auth) if !@user.authorizations.where(provider: auth.provider).first
 
-    UserEmailMailer.with(email: params[:email], token: @user.confirmation_token).confirm_email.deliver_now
+    if @user.email != params[:email]
+      UserEmailMailer.with(email: params[:email], token: @user.confirmation_token).confirm_email.deliver_now
+    end
 
     redirect_to root_path
   end
@@ -17,8 +19,11 @@ class ConfirmationController < ApplicationController
   def confirmation
     if user = User.where(confirmation_token: params[:token])
       user.update(confirmed_at: DateTime.now)
-      sign_in_and_redirect user, event: :authentication
-      set_flash_message(:notice, :success, kind: 'vkontakte') if is_navigational_format?
+
+      # Не знаю, как тут залогиниться и редиктнуться, поэтому приходится снова наживать на sign_in with #{provider}
+
+      redirect_to root_path
     end
   end
+
 end
