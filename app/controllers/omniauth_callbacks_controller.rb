@@ -13,9 +13,9 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.find_for_oauth(request.env['omniauth.auth'])
 
     if @user
-      if @user.persisted?
+      if @user.persisted? && @user.confirmed_at
         sign_in_and_redirect @user, event: :authentication
-        set_flash_message(:notice, :success, kind: 'vkontakte') if is_navigational_format?
+        set_flash_message(:notice, :success, kind: request.env['omniauth.auth'].provider) if is_navigational_format?
       end
     else
       session[:auth] = {
