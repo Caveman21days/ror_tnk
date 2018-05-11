@@ -64,5 +64,9 @@ class User < ApplicationRecord
     user = User.user_with_unconfirmed_authorization(email)
     user.create_authorization(auth) if !user.authorizations.where(provider: auth.provider).first
     user
+
+    if user.email != email
+      UserEmailMailer.with(email: email, token: user.confirmation_token).confirm_email.deliver_now
+    end
   end
 end

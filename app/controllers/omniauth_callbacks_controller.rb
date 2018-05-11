@@ -16,6 +16,8 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       if @user.persisted? && @user.confirmed_at
         sign_in_and_redirect @user, event: :authentication
         set_flash_message(:notice, :success, kind: request.env['omniauth.auth'].provider) if is_navigational_format?
+      else
+        redirect_to new_user_session_path, notice: 'Something gone wrong, try to sign in again or confirm your email!'
       end
     else
       session[:auth] = {
