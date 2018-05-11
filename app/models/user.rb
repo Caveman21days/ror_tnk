@@ -58,4 +58,11 @@ class User < ApplicationRecord
     end
     user
   end
+
+
+  def self.create_user_before_confirmation(email, auth)
+    user = User.user_with_unconfirmed_authorization(email)
+    user.create_authorization(auth) if !user.authorizations.where(provider: auth.provider).first
+    user
+  end
 end
