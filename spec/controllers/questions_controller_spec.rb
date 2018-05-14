@@ -106,7 +106,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to question index view' do
         delete :destroy, params: { id: question }
-        expect(response.status).to eq 204
+        expect(response.status).to eq 302
       end
     end
   end
@@ -139,7 +139,7 @@ RSpec.describe QuestionsController, type: :controller do
     context 'another user try update question' do
       it 'should not update answer' do
         patch :update, params: { id: question2, question: attributes_for(:question), format: :js }
-        expect(response).to render_template 'questions/update'
+        expect(response.status).to eq 302
       end
     end
   end

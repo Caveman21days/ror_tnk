@@ -13,15 +13,15 @@
       - answer.attachments.each do |a|
         %li
           = link_to a.file.identifier, a.file.url
-          - if current_user && current_user.author_of?(answer)
+          - if can?(:destroy, a)
             = link_to 'delete file', attachment_path(a), method: :delete, remote: true
 
 
-      - if user_signed_in? && current_user.author_of?(answer.question)
+      - if can?(:set_the_best, answer)
         %p= link_to 'Best!', set_the_best_answer_path(answer), method: :patch, remote: true
 
 
-      - if user_signed_in? && !current_user.author_of?(answer)
+      - if can?(:vote, answer)
         %div{ class: 'voting' }
           %p
             %div{ class: "vote-links-#{answer.id}" }
@@ -31,7 +31,7 @@
         %p= "#{answer.voting_result[:positive_count]} (#{answer.voting_result[:positive_persent]}%) / #{answer.voting_result[:negative_count]} (#{answer.voting_result[:negative_persent]}%) | #{answer.voting_result[:result]}"
 
 
-      - if user_signed_in? && current_user.author_of?(answer)
+      - if can?(:update, answer)
         %li
           = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
           = link_to 'Delete', answer_path(answer), method: :delete, remote: true

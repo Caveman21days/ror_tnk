@@ -32,8 +32,8 @@ RSpec.describe User do
   end
 
   describe '.find_for_oauth' do
-    let!(:user) { create(:user) }
-    let(:auth) { OmniAuth::AuthHash.new(provider: 'vkontakte', uid: '123123') }
+    let!(:user) { create(:user, confirmed_at: DateTime.now) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'vkontakte', uid: '123456', info: { email: user.email }) }
 
     context 'user already has authorization' do
       it 'returns the user' do

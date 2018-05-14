@@ -4,10 +4,12 @@ class ApplicationController < ActionController::Base
   self.responder = ApplicationResponder
   respond_to :html
 
-
   protect_from_forgery with: :exception
 
   before_action :gon_user, unless: :devise_controller?
+
+  check_authorization unless: :devise_controller?
+
 
 
   def self.render_with_signed_in_user(user, *args)
@@ -16,6 +18,12 @@ class ApplicationController < ActionController::Base
     renderer = self.renderer.new('warden' => proxy)
     renderer.render(*args)
   end
+
+
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_url, alert: exception.message
+  end
+
 
 
   private

@@ -2,6 +2,8 @@ class AttachmentsController < ApplicationController
   before_action :set_attachment
   before_action :set_attachable
 
+  authorize_resource
+
   
   # Не думаю, что тут имеет место responders
 
