@@ -28,7 +28,7 @@ gem 'omniauth'
 gem 'omniauth-vkontakte'
 gem 'omniauth-twitter'
 gem 'letter_opener', :group => :development
-
+gem 'cancancan'
 
 # gem 'therubyracer', platforms: :ruby
 # gem 'mysql2'

@@ -59,11 +59,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'should not delete answer' do
         expect { delete :destroy, params: { question_id: question.id, id: answer.id, format: :js } }.to_not change(question.answers, :count)
       end
-
-      it 'redirects to log in' do
-        delete :destroy, params: { question_id: question.id, id: answer.id, format: :js }
-        expect(response).to render_template 'answers/destroy'
-      end
     end
   end
 
@@ -95,7 +90,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'another user try update answer' do
       it 'should not delete answer' do
         patch :update, params: { question_id: answer2.question, id: answer2.id, answer: attributes_for(:answer), format: :js }
-        expect(response).to render_template 'answers/update'
+        expect(response).to have_http_status(302)
       end
     end
   end
