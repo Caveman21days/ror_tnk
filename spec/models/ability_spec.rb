@@ -37,6 +37,22 @@ RSpec.describe Ability, type: :model do
     it { should be_able_to :update, create(:answer, user: user), user: user }
     it { should_not be_able_to :update, create(:answer, user: other), user: user }
 
+    it { should be_able_to :destroy, create(:question, user: user), user: user }
+    it { should_not be_able_to :destroy, create(:question, user: other), user: user }
 
+    it { should be_able_to :destroy, create(:answer, user: user), user: user }
+    it { should_not be_able_to :destroy, create(:answer, user: other), user: user }
+
+    it { should be_able_to :destroy, create(:attachment, attachable: create(:question, user: user)) }
+    it { should_not be_able_to :destroy, create(:attachment, attachable: create(:question)) }
+
+    it { should be_able_to :set_the_best, create(:answer, question: create(:question, user: user)) }
+    it { should_not be_able_to :set_the_best, create(:answer, question: create(:question, user: other)) }
+
+    it { should be_able_to :vote, create(:question, user: other), user: user }
+    it { should_not be_able_to :vote, create(:question, user: user), user: user }
+
+    it { should be_able_to :vote, create(:answer, user: other), user: user }
+    it { should_not be_able_to :vote, create(:answer, user: user), user: user }
   end
 end
