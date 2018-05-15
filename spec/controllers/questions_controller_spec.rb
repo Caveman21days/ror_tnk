@@ -139,7 +139,7 @@ RSpec.describe QuestionsController, type: :controller do
     context 'another user try update question' do
       it 'should not update answer' do
         patch :update, params: { id: question2, question: attributes_for(:question), format: :js }
-        expect(response.status).to eq 302
+        expect(response.status).to eq 403
       end
     end
   end

@@ -90,7 +90,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'another user try update answer' do
       it 'should not delete answer' do
         patch :update, params: { question_id: answer2.question, id: answer2.id, answer: attributes_for(:answer), format: :js }
-        expect(response).to have_http_status(302)
+        expect(response).to have_http_status(403)
       end
     end
   end

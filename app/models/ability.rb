@@ -26,14 +26,14 @@ class Ability
   def user_abilities
     guest_abilities
     can :create, [Question, Answer, Comment]
-    can :update, [Question, Answer], user: user
-    can :destroy, [Question, Answer], user: user
-    can :destroy, Attachment, attachable: { user: user }
+    can :update, [Question, Answer], user_id: user.id
+    can :destroy, [Question, Answer], user_id: user.id
+    can :destroy, Attachment, attachable: { user_id: user.id }
 
-    can :set_the_best, Answer, question: { user: user }
+    can :set_the_best, Answer, question: { user_id: user.id }
 
     can :vote, [Question, Answer] do |obj|
-      obj.user != user
+      !user.author_of?(obj)
     end
   end
 end
