@@ -17,6 +17,10 @@ $ ->
     vote = e.detail[0]
     $('.vote-' + question_id).html('<p>' + vote.positive_count + ' (' + vote.positive_persent + '%) ' + ' / ' + vote.negative_count + ' (' + vote.negative_persent + '%) ' + ' | ' + vote.result + '</p>')
 
+  $('.questions').bind 'ajax:error', (e) ->
+    $('.flash').html('<p> You can not manage question </p>')
+
+
   App.cable.subscriptions.create('QuestionsChannel', {
   connected: ->
     @perform 'follow',
@@ -25,3 +29,4 @@ $ ->
     data = $.parseJSON(data)
     questions.append(JST['templates/questions'](data.question))
   })
+
