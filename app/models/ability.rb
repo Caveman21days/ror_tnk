@@ -35,5 +35,7 @@ class Ability
     can :vote, [Question, Answer] do |obj|
       !user.author_of?(obj)
     end
+
+    can [:me, :index], User
   end
 end
