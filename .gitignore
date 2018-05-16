@@ -17,7 +17,7 @@
 /yarn-error.log
 
 .byebug_history
-.idea
+/.idea/*
 *~
 
-config/database.yml
+/config/database.yml

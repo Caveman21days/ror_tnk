@@ -29,6 +29,7 @@ gem 'omniauth-vkontakte'
 gem 'omniauth-twitter'
 gem 'letter_opener', :group => :development
 gem 'cancancan'
+gem 'doorkeeper'
 
 # gem 'therubyracer', platforms: :ruby
 # gem 'mysql2'
@@ -45,12 +46,12 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'capybara-webkit'
   gem 'capybara-email'
+  gem 'json_spec'
 end
 
 group :test do
   gem 'shoulda-matchers', '~> 3.1'
   gem 'rails-controller-testing'
-
 end
 
 group :development do
