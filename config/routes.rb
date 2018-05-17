@@ -17,7 +17,6 @@ Rails.application.routes.draw do
     resources :comments, shallow: true, only: [:create]
   end
 
-
   resources :questions, concerns: [:votable, :commentable] do
     resources :answers, concerns: [:votable, :commentable], shallow: true, only: [:create, :destroy, :update] do
       member do
@@ -30,8 +29,11 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :profiles do
+      resources :profiles, only: [:index] do
         get :me, on: :collection
+      end
+      resources :questions, only: [:index, :show, :create] do
+        resources :answers, only: [:index, :show, :create], shallow: true
       end
     end
   end
