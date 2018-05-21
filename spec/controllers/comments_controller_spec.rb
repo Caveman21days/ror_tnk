@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe CommentsController, type: :controller do
   describe 'POST #create' do
     let!(:question) { create(:question) }
-    let(:parameters) do #вот это подсмотрел в интернетах
+    let(:parameters) do
       {
         question_id: question.id,
         format: :json,

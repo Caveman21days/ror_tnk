@@ -10,7 +10,7 @@ feature 'Add files to answer' do
     visit question_path(question)
   end
 
-  scenario 'user adds any files than edit answer', js: true do
+  scenario 'user adds any files than create object', js: true do
     within ".answer-#{answer.id}" do
       click_on 'Edit'
       click_on 'add file'
@@ -33,7 +33,7 @@ feature 'Add files to answer' do
     end
   end
 
-  scenario 'user adds any files than asks question', js: true do
+  scenario 'user adds any files than create object', js: true do
     fill_in 'answer_body', with: 'test answer'
     click_on 'add file'
     click_on 'add file'

@@ -111,27 +111,12 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #vote' do
     let(:question) { create(:question) }
-    let(:answer) { create(:answer, question: question) }
+    let(:object) { create(:answer, question: question) }
 
-    context 'user can vote for answer' do
-      sign_in_user
+    it_behaves_like "Voted"
 
-      it 'add vote to answer' do
-        post :vote, params: { question_id: question, id: answer, vote: true, format: :json }
-        expect(response.status).to eq(200)
-      end
-
-      it 'change count of answer votes' do
-        expect{ post :vote, params: { question_id: question, id: answer, vote: true, format: :json } }.to change(answer.votes, :count).by(1)
-      end
-    end
-
-    context 'user can not vote for answer' do
-      it 'try to vote for answer' do
-        post :vote, params: { question_id: question, id: answer, vote: true, format: :json }
-        expect(response.body).to include('You need to sign in or sign up before continuing')
-        expect(response.status).to eq(401)
-      end
+    def do_request
+      post :vote, params: { question_id: question, id: object, vote: true, format: :json }
     end
   end
 end

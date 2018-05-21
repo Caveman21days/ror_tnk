@@ -2,18 +2,7 @@ require 'rails_helper'
 
 describe 'Questions API' do
   describe 'GET /index' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        get '/api/v1/questions', params: { format: :json }
-        expect(response).to have_http_status 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        get '/api/v1/questions', params: { format: :json, access_token: '123456' }
-        expect(response).to have_http_status 401
-      end
-    end
-
+    it_behaves_like "API Authenticable"
 
     context 'authorized' do
       let(:access_token) { create(:access_token) }
@@ -60,6 +49,7 @@ describe 'Questions API' do
       let(:access_token) { create(:access_token) }
       let!(:comment) { Comment.create(commentable: question, user: create(:user)) }
       let!(:attachment) { create(:attachment, attachable: question) }
+      let!(:object) { question }
 
       before { get "/api/v1/questions/#{question.id}", params: { format: :json, access_token: access_token.token } }
 
@@ -77,9 +67,7 @@ describe 'Questions API' do
         end
       end
 
-      it "question object contains attachments -> url" do
-        expect(response.body).to be_json_eql(question.send('attachments'.to_sym).first.file.url.to_json).at_path('attachments/0/url')
-      end
+      it_behaves_like "API attachments"
     end
   end
 
@@ -89,7 +77,6 @@ describe 'Questions API' do
       let(:access_token) { create(:access_token) }
 
       context 'with valid question params' do
-
         before { post "/api/v1/questions", params: { format: :json, question: attributes_for(:question), access_token: access_token.token } }
 
         it 'returns 201 status code' do
@@ -109,6 +96,7 @@ describe 'Questions API' do
 
       context 'with invalid question params' do
         before { post "/api/v1/questions", params: { format: :json, question: attributes_for(:invalid_question), access_token: access_token.token } }
+
         it "returns 422 status code" do
           expect(response).to have_http_status 422
         end
@@ -125,4 +113,11 @@ describe 'Questions API' do
       end
     end
   end
+
+
+
+  def do_request(options = {})
+    get '/api/v1/questions', params: { format: :json }.merge(options)
+  end
+
 end
