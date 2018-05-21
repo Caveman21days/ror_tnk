@@ -1,27 +1,14 @@
 class AttachmentsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_attachment
-  before_action :set_attachable
+  # before_action :set_attachable
 
   authorize_resource
+  respond_to :js
 
-  
-  # Не думаю, что тут имеет место responders
 
   def destroy
-    if current_user && current_user.author_of?(@attachable)
-      if @attachment.destroy
-
-        if @attachable.class.name == 'Question'
-          redirect_to @attachment.question, notice: 'File successfully deleted!'
-        elsif @attachable.class.name == 'Answer'
-          @question = @attachment.question
-        end
-
-        flash[:notice] = 'File successfully deleted!'
-      else
-        flash[:danger] = 'File was not deleted!'
-      end
-    end
+    respond_with(@attachment.destroy)
   end
 
 
@@ -30,9 +17,5 @@ class AttachmentsController < ApplicationController
 
   def set_attachment
     @attachment = Attachment.find(params[:id])
-  end
-
-  def set_attachable
-    @attachable = @attachment.attachable
   end
 end
