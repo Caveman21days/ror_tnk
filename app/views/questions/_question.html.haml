@@ -4,6 +4,13 @@
   - if action_name == 'show'
     %p= question.body
 
+  .subscribe
+    - if current_user && current_user.has_subscribe?(question)
+      = link_to 'Unsubscribe', subscribe_path(current_user.get_subscribe(question)), method: :delete, remote: true, class: 'unsubscribe-btn'
+    - else
+      - if can?(:create, Subscribe)
+        = link_to 'Subscribe', question_subscribes_path(question), method: :post, remote: true, class: 'subscribe-btn'
+
 
   - if can?(:vote, question)
     %div{ class: 'voting' }
@@ -33,6 +40,6 @@
     = render 'questions/form', question: question
 
 
-  -if action_name == 'show'
+  - if action_name == 'show'
     = render 'shared/comment', commentable: question
 %hr

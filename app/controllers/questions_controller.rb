@@ -11,7 +11,6 @@ class QuestionsController < ApplicationController
   authorize_resource
 
 
-
   def index
     gon.question = Question.last
     respond_with(@questions = Question.all.sorted)

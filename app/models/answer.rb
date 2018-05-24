@@ -13,10 +13,16 @@ class Answer < ApplicationRecord
 
   scope :sorted, -> { order(:the_best, created_at: :desc) }
 
+  after_create :notify_subscribed_user
+
   def set_the_best
     transaction do
       self.question.answers.update_all(the_best: nil)
       self.update!(the_best: true)
     end
+  end
+
+  def notify_subscribed_user
+    NotifySubscribedUserJob.perform_later
   end
 end

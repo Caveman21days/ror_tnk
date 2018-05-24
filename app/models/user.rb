@@ -3,6 +3,8 @@ class User < ApplicationRecord
   has_many :answers
   has_many :votes
   has_many :authorizations
+  has_many :subscribes, dependent: :destroy
+
 
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -66,7 +68,16 @@ class User < ApplicationRecord
     user
 
     if user.email != email
-      UserEmailMailer.with(email: email, token: user.confirmation_token).confirm_email.deliver_now
+      UserEmailMailer.with(email: email, token: user.confirmation_token).confirm_email.deliver_later
     end
+  end
+
+
+  def has_subscribe?(question)
+    self.subscribes.where(question: question).exists?
+  end
+
+  def get_subscribe(question)
+    self.subscribes.where(question: question).first
   end
 end
