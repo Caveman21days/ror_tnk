@@ -1,0 +1,5 @@
+%h4= @greeting
+
+%h5 A new answer was added to question:
+%p= link_to @question.title, question_url(@question)
+%p= @answer.body

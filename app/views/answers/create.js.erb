@@ -1,13 +1,13 @@
 <% if @answer.errors.any? %>
-  $('.errors').html('<%= j render 'shared/errors', object: @answer %>');
+$('.errors').html('<%= j render 'shared/errors', object: @answer %>');
 <% else %>
-  $('.flash').html('<%= j render 'shared/flash' %>');
-  $('.answers').append('<%= j render @answer %>');
-  $('.answer-create #answer_body').val('');
-  $('.edit-answer-link').click(function(e) {
-      e.preventDefault();
-      $(this).hide();
-      var answer_id = $(this).data('answerId');
-      $('form#edit-answer-' + answer_id).show();
-  });
+$('.flash').html('<%= j render 'shared/flash' %>');
+$('.answers').append('<%= j render @answer %>');
+$('.answer-create #answer_body').val('');
+$('.edit-answer-link').click(function(e) {
+    e.preventDefault();
+    $(this).hide();
+    var answer_id = $(this).data('answerId');
+    $('form#edit-answer-' + answer_id).show();
+});
 <% end %>

@@ -6,6 +6,8 @@ RSpec.describe User do
   it { should have_many(:questions) }
   it { should have_many(:answers) }
   it { should have_many(:authorizations) }
+  it { should have_many(:subscribes) }
+
 
   describe '#author_of?' do
     let(:user_with_answer) { create(:user_with_answer) }
@@ -92,6 +94,16 @@ RSpec.describe User do
           expect(authorization.uid).to eq auth.uid
         end
       end
+    end
+  end
+
+
+  describe '.send_daily_digest' do
+    let(:users) { create_list(:user, 2) }
+
+    it 'should send daily digest to all users' do
+      users.each { |user| expect(DailyMailer).to receive(:digest).with(user).and_call_original }
+      User.send_daily_digest
     end
   end
 end

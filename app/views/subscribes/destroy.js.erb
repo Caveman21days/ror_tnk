@@ -1,0 +1,6 @@
+<% if @subscribe.errors.any? %>
+  $('.errors').html('<%= j render 'shared/errors', object: @subscribe %>');
+<% else %>
+  $('.flash').html('<%= j render 'shared/flash' %>');
+  $('.unsubscribe-btn').replaceWith('<%= j link_to 'Subscribe', question_subscribes_path(@subscribe.question), method: :post, remote: true, class: 'subscribe-btn' %>')
+<% end %>
