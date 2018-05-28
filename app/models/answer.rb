@@ -23,6 +23,6 @@ class Answer < ApplicationRecord
   end
 
   def notify_subscribed_user
-    NotifySubscribedUserJob.perform_later
+    NotifySubscribedUserJob.perform_later(self)
   end
 end
