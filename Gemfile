@@ -9,7 +9,7 @@ end
 gem 'rails', '~> 5.1.5'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.7'
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 5.0', '>= 5.0.6'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
 gem 'jquery-turbolinks'
@@ -36,9 +36,10 @@ gem 'oj_mimic_json'
 gem 'whenever'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', require: nil
+gem 'mysql2'
+gem 'thinking-sphinx'
 
 # gem 'therubyracer', platforms: :ruby
-# gem 'mysql2'
 # gem 'redis', '~> 4.0'
 # gem 'bcrypt', '~> 3.1.7'
 # gem 'capistrano-rails', group: :development

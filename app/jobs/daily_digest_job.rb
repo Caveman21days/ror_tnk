@@ -3,7 +3,6 @@ class DailyDigestJob < ApplicationJob
 
   def perform
     questions = Question.last_day.to_a
-    p questions
 
     if !questions.blank?
       User.find_each do |user|

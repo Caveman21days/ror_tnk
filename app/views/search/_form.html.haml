@@ -1,0 +1,10 @@
+%br
+%br
+
+= form_tag search_path, method: :get do
+  .form-group
+    = label_tag :object, "Search by:"
+    = select_tag :object, options_for_select(Search.filters, params[:object])
+  .form-group
+    = search_field_tag :q, params[:q], placeholder: "Search"
+  = submit_tag "Search"
