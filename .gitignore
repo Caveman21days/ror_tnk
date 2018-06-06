@@ -20,4 +20,9 @@
 /.idea/*
 *~
 
-/config/database.yml
+config/database.yml
+
+dump.rdb
+config/*.sphinx.conf
+db/sphinx
+
