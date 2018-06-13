@@ -26,3 +26,5 @@ dump.rdb
 config/*.sphinx.conf
 db/sphinx
 
+/config/*.sphinx.conf
+/config/thinking_sphinx.conf

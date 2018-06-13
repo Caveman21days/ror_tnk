@@ -41,11 +41,11 @@ gem 'thinking-sphinx'
 gem 'dotenv'
 gem 'dotenv-deployment', require: 'dotenv/deployment'
 gem 'therubyracer'
+gem 'unicorn'
 
 # gem 'therubyracer', platforms: :ruby
 # gem 'redis', '~> 4.0'
 # gem 'bcrypt', '~> 3.1.7'
-
 
 group :development, :test do
   gem 'rspec-rails'
@@ -74,6 +74,7 @@ group :development do
   gem 'capistrano-bundler', require: false
   gem 'capistrano-rvm',     require: false
   gem 'capistrano-sidekiq', require: false
+  gem 'capistrano3-unicorn', require: false
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
