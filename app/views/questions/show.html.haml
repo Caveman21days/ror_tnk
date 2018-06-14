@@ -1,5 +1,6 @@
-.question{ data: { question_id: @question.id } }
-  = render @question
+- cache @question do
+  .question{ data: { question_id: @question.id } }
+    = render @question
 
 .errors
 
