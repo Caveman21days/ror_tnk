@@ -1,54 +1,55 @@
 - if answer.persisted?
-  %div{ class: "answer-#{answer.id}" }
-    %ul
-      - if answer.the_best
-        %li
-          %h4= answer.user.email
-        %li
-          %h4= answer.body
-      -else
-        %li= answer.user.email
-        %li= answer.body
+  - cache answer do
+    %div{ class: "answer-#{answer.id}" }
+      %ul
+        - if answer.the_best
+          %li
+            %h4= answer.user.email
+          %li
+            %h4= answer.body
+        -else
+          %li= answer.user.email
+          %li= answer.body
 
-      - answer.attachments.each do |a|
-        %li
-          = link_to a.file.identifier, a.file.url
-          - if can?(:destroy, a)
-            = link_to 'delete file', attachment_path(a), method: :delete, remote: true
-
-
-      - if can?(:set_the_best, answer)
-        %p= link_to 'Best!', set_the_best_answer_path(answer), method: :patch, remote: true
+        - answer.attachments.each do |a|
+          %li
+            = link_to a.file.identifier, a.file.url
+            - if can?(:destroy, a)
+              = link_to 'delete file', attachment_path(a), method: :delete, remote: true
 
 
-      - if can?(:vote, answer)
-        %div{ class: 'voting' }
+        - if can?(:set_the_best, answer)
+          %p= link_to 'Best!', set_the_best_answer_path(answer), method: :patch, remote: true
+
+
+        - if can?(:vote, answer)
+          %div{ class: 'voting' }
+            %p
+              %div{ class: "vote-links-#{answer.id}" }
+                = link_to 'vote up!', vote_answer_path(answer, user_vote: true), method: :post, remote: true, class: "vote-answer-link", data: { answer_id: answer.id }
+                = link_to 'vote for!', vote_answer_path(answer, user_vote: false), method: :post, remote: true, class: "vote-answer-link", data: { answer_id: answer.id }
+        %div{ class: "vote-#{answer.id}" }
+          %p= "#{answer.voting_result[:positive_count]} (#{answer.voting_result[:positive_persent]}%) / #{answer.voting_result[:negative_count]} (#{answer.voting_result[:negative_persent]}%) | #{answer.voting_result[:result]}"
+
+
+        - if can?(:update, answer)
+          %li
+            = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+            = link_to 'Delete', answer_path(answer), method: :delete, remote: true
+
           %p
-            %div{ class: "vote-links-#{answer.id}" }
-              = link_to 'vote up!', vote_answer_path(answer, user_vote: true), method: :post, remote: true, class: "vote-answer-link", data: { answer_id: answer.id }
-              = link_to 'vote for!', vote_answer_path(answer, user_vote: false), method: :post, remote: true, class: "vote-answer-link", data: { answer_id: answer.id }
-      %div{ class: "vote-#{answer.id}" }
-        %p= "#{answer.voting_result[:positive_count]} (#{answer.voting_result[:positive_persent]}%) / #{answer.voting_result[:negative_count]} (#{answer.voting_result[:negative_persent]}%) | #{answer.voting_result[:result]}"
+            = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+              = f.label :body, 'Answer'
+              = f.text_area :body
 
+              #attachments
+                = f.fields_for :attachments do |attachment|
+                  = render 'shared/attachments', f: attachment
+                .links
+                  = link_to_add_association 'add file', f, :attachments, partial: 'shared/attachments'
+              %br
+              = f.submit 'Save'
 
-      - if can?(:update, answer)
-        %li
-          = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
-          = link_to 'Delete', answer_path(answer), method: :delete, remote: true
-
-        %p
-          = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
-            = f.label :body, 'Answer'
-            = f.text_area :body
-
-            #attachments
-              = f.fields_for :attachments do |attachment|
-                = render 'shared/attachments', f: attachment
-              .links
-                = link_to_add_association 'add file', f, :attachments, partial: 'shared/attachments'
-            %br
-            = f.submit 'Save'
-
-      = render 'shared/comment', commentable: answer
+        = render 'shared/comment', commentable: answer
 
       %hr

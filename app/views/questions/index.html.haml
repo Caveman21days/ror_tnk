@@ -1,5 +1,6 @@
-.questions
-  = render @questions.sorted
+- cache collection_cache_key_for :question do
+  .questions
+    = render @questions.sorted
 
 = link_to 'Ask question', new_question_path
 = render 'search/form'
